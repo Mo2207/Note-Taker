@@ -4,6 +4,7 @@ const app = express();
 const fs = require('fs');
 const PORT = 3001;
 const path = require('path');
+const uuid = require('./helpers/uuid')
 
 // jsonNotes is a array variable that stores json data from db.json
 const jsonNotes = require('./db/db.json')
@@ -43,6 +44,7 @@ app.post('/api/notes', (req, res) => {
   // if both were provided, save into newNote variable
   if (title && text) {
     const newNote = {
+      noteId: uuid(),
       title,
       text
     }
