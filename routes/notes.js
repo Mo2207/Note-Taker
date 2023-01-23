@@ -52,23 +52,39 @@ notes.post('/', (req, res) => {
 notes.delete('/:id', (req, res) => {
   console.info(`${req.method} request received to delete note with id of ${req.params.id}`);
 
+  // targetedNote is the id of the note to be deleted
   const targetedNote = req.params.id;
-  fs.readFile('./db/db.json', (err, data) => {
-    console.log(JSON.parse(data))
-    if (err) {
-      console.error(err)
-    } else {
-      var jsonNotes = data.filter((note) => note.noteId != targetedNote)
-    }
-  })
 
-  fs.writeFile('./db/db.json', JSON.stringify(jsonNotes), (err) =>
-    err
-      ? console.error(err)
-      : res.send(`Note with id: ${req.params.id} has been deleted.`)
-  )
-  // console.log(jsonNotes)
+  // read the contents of db.json file
+  function readFromFile() {
+    fs.readFile('./db/db.json', (err, data) => {
+      data = JSON.parse(data);
+      if (err) {
+        console.error(err)
+      } else {
+        jsonNotes = data.filter((note) => note.id !== targetedNote)
+        console.log('jsonNotes after deletion:');
+        console.log(jsonNotes)
+        return jsonNotes;
+      }
+    })
+  }
+  
+  // rewrite the contents of db.json file without the targetedNote
+  function reWriteFile() {
+    console.log('jsonNotes before re-write:');
+    console.log(jsonNotes)
+    fs.writeFile('./db/db.json', JSON.stringify(jsonNotes), (err) => {
+      err
+        ? console.error(err)
+        : res.send(`Note with id: ${targetedNote} has been deleted.`)
+    })
+  }
 
+  // first read from the db.json file
+  readFromFile();
+  // after the file has been read and the targetedNote has been removed, rewrite the file
+  setTimeout(reWriteFile, 10)
 })
 
 module.exports = notes;
