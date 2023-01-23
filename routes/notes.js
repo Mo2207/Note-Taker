@@ -63,8 +63,8 @@ notes.delete('/:id', (req, res) => {
         console.error(err)
       } else {
         jsonNotes = data.filter((note) => note.id !== targetedNote)
-        console.log('jsonNotes after deletion:');
-        console.log(jsonNotes)
+        // console.log('jsonNotes after deletion:');
+        // console.log(jsonNotes)
         return jsonNotes;
       }
     })
@@ -72,8 +72,8 @@ notes.delete('/:id', (req, res) => {
   
   // rewrite the contents of db.json file without the targetedNote
   function reWriteFile() {
-    console.log('jsonNotes before re-write:');
-    console.log(jsonNotes)
+    // console.log('jsonNotes before re-write:');
+    // console.log(jsonNotes)
     fs.writeFile('./db/db.json', JSON.stringify(jsonNotes), (err) => {
       err
         ? console.error(err)
